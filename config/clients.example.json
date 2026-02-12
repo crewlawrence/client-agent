@@ -1,0 +1,11 @@
+{
+  "clients": [
+    {
+      "id": "acme",
+      "tenantId": "tenant-1",
+      "name": "Acme Co",
+      "realmId": "1234567890",
+      "clientEmail": "client@example.com"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "users": [
+    {
+      "id": "71b47862-0a8c-493e-a910-d6479f6f1f63",
+      "name": "Crew",
+      "email": "crewclawrence@gmail.com",
+      "passwordHash": "scrypt$WJR2bfmXAPqWotZCqjyYYQ==$AyUT4D1VJcPobih3pqaMWfJjLw5d+OxbSJTdDtUNAcw=",
+      "tenantId": "5ecf8d55-7d85-4c19-88fd-4d7f871fcb6a",
+      "role": "buyer"
+    }
+  ]
+}

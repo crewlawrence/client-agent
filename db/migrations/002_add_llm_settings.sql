@@ -1,0 +1,2 @@
+ALTER TABLE tenants ADD COLUMN IF NOT EXISTS llm_mode TEXT DEFAULT 'meaningful';
+ALTER TABLE tenants ADD COLUMN IF NOT EXISTS llm_min_change_count INT DEFAULT 2;

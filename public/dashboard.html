@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard | LedgerPulse AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="dashboard">
+  <header class="container nav">
+    <div class="brand">LedgerPulse AI</div>
+    <form method="POST" action="/logout">
+      <button class="button-secondary" type="submit">Logout</button>
+    </form>
+  </header>
+
+  <main class="container">
+    <section class="dashboard-header">
+      <h1>Pending client updates</h1>
+      <p class="muted">Review and approve drafts before they are added to Gmail.</p>
+      <div class="hero-actions">
+        <button id="runDrafts" class="button-primary">Generate new drafts</button>
+        <button id="runScheduled" class="button-secondary">Run scheduled</button>
+      </div>
+    </section>
+
+    <section class="grid-3" style="margin-bottom: 32px;">
+      <div class="feature">
+        <h3>QuickBooks Online</h3>
+        <p id="qboStatus" class="muted">Checking connection...</p>
+        <a class="button-secondary" href="/auth/quickbooks">Connect a client</a>
+      </div>
+      <div class="feature">
+        <h3>Gmail drafts</h3>
+        <p id="gmailStatus" class="muted">Checking connection...</p>
+        <a class="button-secondary" href="/auth/gmail">Connect Gmail</a>
+      </div>
+      <div class="feature">
+        <h3>Connected clients</h3>
+        <p id="clientCount" class="muted">Loading...</p>
+        <p class="muted">Connect a QBO company file for each client.</p>
+      </div>
+    </section>
+
+    <section class="feature" style="margin-bottom: 32px;">
+      <h3>Client roster</h3>
+      <div class="draft-meta" style="margin-bottom: 16px;">
+        <input id="filterSearch" type="text" placeholder="Search name or email" />
+        <input id="filterTag" type="text" placeholder="Tag filter" />
+        <select id="filterStatus">
+          <option value="all">All</option>
+          <option value="connected">Connected</option>
+          <option value="disconnected">Disconnected</option>
+        </select>
+      </div>
+      <div id="clientList"></div>
+    </section>
+
+    <section class="feature" style="margin-bottom: 32px;">
+      <h3>LLM intelligence policy</h3>
+      <form id="llmForm" class="draft-actions">
+        <label>Mode
+          <select id="llmMode" name="llmMode">
+            <option value="meaningful">Only meaningful changes</option>
+            <option value="scheduled">Only on scheduled runs</option>
+            <option value="always">Always use LLM</option>
+            <option value="never">Never use LLM</option>
+          </select>
+        </label>
+        <label>Minimum change count
+          <input id="llmMinChangeCount" name="llmMinChangeCount" type="number" min="0" max="10" value="0" />
+        </label>
+        <button class="button-primary" type="submit">Save</button>
+      </form>
+      <p class="muted">Controls when the financial copilot calls the LLM to interpret signals.</p>
+    </section>
+
+    <section class="draft-list" id="draftList"></section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

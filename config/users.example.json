@@ -1,0 +1,20 @@
+{
+  "users": [
+    {
+      "id": "buyer-1",
+      "name": "Primary Buyer",
+      "email": "buyer@example.com",
+      "password": "change-me",
+      "tenantId": "tenant-1",
+      "role": "buyer"
+    },
+    {
+      "id": "admin-1",
+      "name": "Firm Admin",
+      "email": "admin@example.com",
+      "password": "change-me",
+      "tenantId": "tenant-1",
+      "role": "admin"
+    }
+  ]
+}

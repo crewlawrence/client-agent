@@ -1,0 +1,21 @@
+{
+  "name": "qbo-client-updates-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node src/server.js",
+    "start": "node src/server.js",
+    "migrate": "node src/migrate.js",
+    "retention": "node src/retention.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "googleapis": "^131.0.0",
+    "openai": "^4.78.1",
+    "pg": "^8.11.5"
+  }
+}
