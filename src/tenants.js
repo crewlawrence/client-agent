@@ -1,14 +1,14 @@
 import { query } from './db.js';
 
 export async function getTenant(tenantId) {
-  const res = await query('SELECT * FROM tenants WHERE id=$1', [tenantId]);
+  const res = await query('SELECT * FROM tenants WHERE id=?', [tenantId]);
   return res.rows[0] || {};
 }
 
 export async function updateTenant(tenantId, updates) {
   const existing = await getTenant(tenantId);
   const res = await query(
-    'UPDATE tenants SET display_name=$1, llm_mode=$2, llm_min_change_count=$3, updated_at=now() WHERE id=$4 RETURNING *',
+    'UPDATE tenants SET display_name=?, llm_mode=?, llm_min_change_count=?, updated_at=datetime(\'now\') WHERE id=? RETURNING *',
     [
       updates.displayName ?? existing.display_name ?? null,
       updates.llmMode ?? existing.llm_mode ?? 'scheduled',

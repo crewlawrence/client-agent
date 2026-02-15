@@ -1,33 +1,21 @@
-import pg from 'pg';
+import Database from 'better-sqlite3';
+import fs from 'fs';
+import path from 'path';
 
-const { Pool } = pg;
+const dataDir = path.resolve('data');
+if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 
-const DATABASE_URL = process.env.DATABASE_URL || '';
-if (!DATABASE_URL) {
-  console.warn('DATABASE_URL is not set. Database features will fail.');
-}
+const dbPath = process.env.SQLITE_PATH || path.join(dataDir, 'app.db');
+const db = new Database(dbPath);
 
-const pool = new Pool({
-  connectionString: DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-});
+db.pragma('foreign_keys = ON');
 
-export async function query(text, params) {
-  const res = await pool.query(text, params);
-  return res;
-}
-
-export async function withTransaction(fn) {
-  const client = await pool.connect();
-  try {
-    await client.query('BEGIN');
-    const result = await fn(client);
-    await client.query('COMMIT');
-    return result;
-  } catch (err) {
-    await client.query('ROLLBACK');
-    throw err;
-  } finally {
-    client.release();
+export async function query(text, params = []) {
+  const stmt = db.prepare(text);
+  if (stmt.reader) {
+    const rows = stmt.all(params);
+    return { rows, rowCount: rows.length };
   }
+  const info = stmt.run(params);
+  return { rows: [], rowCount: info.changes, lastInsertRowid: info.lastInsertRowid };
 }

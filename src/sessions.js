@@ -3,9 +3,9 @@ import { query } from './db.js';
 
 export async function createSession(user) {
   const token = crypto.randomBytes(24).toString('hex');
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
   await query(
-    'INSERT INTO sessions (token, user_id, tenant_id, email, role, expires_at) VALUES ($1, $2, $3, $4, $5, $6)',
+    'INSERT INTO sessions (token, user_id, tenant_id, email, role, expires_at) VALUES (?,?,?,?,?,?)',
     [token, user.id, user.tenant_id, user.email, user.role || 'buyer', expiresAt]
   );
   return { token, expiresAt };
@@ -13,7 +13,7 @@ export async function createSession(user) {
 
 export async function getSession(token) {
   if (!token) return null;
-  const res = await query('SELECT * FROM sessions WHERE token=$1 LIMIT 1', [token]);
+  const res = await query('SELECT * FROM sessions WHERE token=? LIMIT 1', [token]);
   const session = res.rows[0];
   if (!session) return null;
   if (new Date(session.expires_at) < new Date()) {
@@ -31,9 +31,9 @@ export async function getSession(token) {
 
 export async function deleteSession(token) {
   if (!token) return;
-  await query('DELETE FROM sessions WHERE token=$1', [token]);
+  await query('DELETE FROM sessions WHERE token=?', [token]);
 }
 
 export async function deleteExpiredSessions() {
-  await query('DELETE FROM sessions WHERE expires_at < now()');
+  await query("DELETE FROM sessions WHERE expires_at < datetime('now')");
 }

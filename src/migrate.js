@@ -2,12 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import { query } from './db.js';
 
-const migrationsDir = path.resolve('db', 'migrations');
+const migrationsDir = path.resolve('db', 'migrations_sqlite');
 
 async function ensureSchemaTable() {
   await query(`CREATE TABLE IF NOT EXISTS schema_migrations (
     filename TEXT PRIMARY KEY,
-    applied_at TIMESTAMPTZ DEFAULT now()
+    applied_at TEXT DEFAULT (datetime('now'))
   )`);
 }
 
@@ -20,7 +20,7 @@ async function applyMigration(filename) {
   const filePath = path.join(migrationsDir, filename);
   const sql = fs.readFileSync(filePath, 'utf8');
   await query(sql);
-  await query('INSERT INTO schema_migrations (filename) VALUES ($1)', [filename]);
+  await query('INSERT INTO schema_migrations (filename) VALUES (?)', [filename]);
   console.log(`Applied ${filename}`);
 }
 

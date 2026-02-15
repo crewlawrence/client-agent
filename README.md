@@ -33,16 +33,16 @@ Web app that connects to QuickBooks Online, gathers key financial data, detects 
 - Connect Gmail once per tenant to enable drafting.
 
 ## Notes
-- Tokens are stored encrypted in Postgres (AES-256-GCM via `ENCRYPTION_KEY`).
+- Tokens are stored encrypted in SQLite (AES-256-GCM via `ENCRYPTION_KEY`).
 - Multi-tenant access is enforced by `tenantId`.
 - Per-client schedules and tags are stored on each client.
 - Scheduled runs can be triggered via `POST /api/run-scheduled`.
 - Retention can be run via `npm run retention`.
-- Audit logs are stored in Postgres (`audit_logs`).
+- Audit logs are stored in SQLite (`audit_logs`).
 
 ## Production checklist
 - Set `NODE_ENV=production`
 - Set `BASE_URL` to your HTTPS domain
 - Use the reverse proxy example in `config/nginx.example.conf`
 - Use a strong 256-bit `ENCRYPTION_KEY`
-- Set `DATABASE_URL` to your managed Postgres instance
+- Set `SQLITE_PATH` to persistent storage

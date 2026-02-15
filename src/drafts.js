@@ -1,7 +1,7 @@
 import { query } from './db.js';
 
 export async function listDrafts(tenantId) {
-  const res = await query('SELECT * FROM drafts WHERE tenant_id=$1 ORDER BY created_at DESC', [tenantId]);
+  const res = await query('SELECT * FROM drafts WHERE tenant_id=? ORDER BY created_at DESC', [tenantId]);
   return res.rows.map((d) => ({
     id: d.id,
     tenantId: d.tenant_id,
@@ -20,7 +20,7 @@ export async function listDrafts(tenantId) {
 
 export async function createDraftEntry(entry) {
   const res = await query(
-    'INSERT INTO drafts (tenant_id, client_id, client_name, client_email, subject, body, change_count, status) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *',
+    'INSERT INTO drafts (tenant_id, client_id, client_name, client_email, subject, body, change_count, status) VALUES (?,?,?,?,?,?,?,?) RETURNING *',
     [
       entry.tenantId,
       entry.clientId,
@@ -37,21 +37,21 @@ export async function createDraftEntry(entry) {
 
 export async function updateDraft(id, updates) {
   const res = await query(
-    'UPDATE drafts SET status=$1, gmail_draft_id=$2, approved_at=$3 WHERE id=$4 RETURNING *',
+    'UPDATE drafts SET status=?, gmail_draft_id=?, approved_at=? WHERE id=? RETURNING *',
     [updates.status, updates.gmailDraftId, updates.approvedAt, id]
   );
   return res.rows[0] || null;
 }
 
 export async function getDraft(id) {
-  const res = await query('SELECT * FROM drafts WHERE id=$1', [id]);
+  const res = await query('SELECT * FROM drafts WHERE id=?', [id]);
   return res.rows[0] || null;
 }
 
 export async function deleteDraftsForClient(tenantId, clientId) {
-  await query('DELETE FROM drafts WHERE tenant_id=$1 AND client_id=$2', [tenantId, clientId]);
+  await query('DELETE FROM drafts WHERE tenant_id=? AND client_id=?', [tenantId, clientId]);
 }
 
 export async function deleteOldDrafts(days) {
-  await query('DELETE FROM drafts WHERE created_at < now() - ($1 || \' days\')::interval', [days]);
+  await query("DELETE FROM drafts WHERE created_at < datetime('now', ?)", [`-${days} days`]);
 }

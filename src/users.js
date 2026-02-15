@@ -18,7 +18,7 @@ function verifyScrypt(hash, password) {
 }
 
 export async function findUserByEmail(email) {
-  const res = await query('SELECT * FROM users WHERE lower(email)=lower($1) LIMIT 1', [email]);
+  const res = await query('SELECT * FROM users WHERE lower(email)=lower(?) LIMIT 1', [email]);
   return res.rows[0] || null;
 }
 
@@ -47,8 +47,8 @@ export function hashPassword(password) {
 }
 
 export async function createTenant(displayName) {
-  const res = await query('INSERT INTO tenants (display_name) VALUES ($1) RETURNING id', [displayName || null]);
-  return res.rows[0].id;
+  const res = await query('INSERT INTO tenants (display_name) VALUES (?) RETURNING id', [displayName || null]);
+  return res.rows[0]?.id;
 }
 
 export async function createUser({ name, email, password, tenantId, role = 'buyer' }) {
@@ -60,7 +60,7 @@ export async function createUser({ name, email, password, tenantId, role = 'buye
   }
   const passwordHash = hashPassword(password);
   const res = await query(
-    'INSERT INTO users (tenant_id, email, name, password_hash, role) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+    'INSERT INTO users (tenant_id, email, name, password_hash, role) VALUES (?,?,?,?,?) RETURNING *',
     [tenantId, email, name || email, passwordHash, role]
   );
   return res.rows[0];
