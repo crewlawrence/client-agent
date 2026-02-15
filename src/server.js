@@ -91,7 +91,7 @@ app.post('/login', async (req, res) => {
   try {
     const user = await findUserByEmail(email);
     if (!verifyPassword(user, password)) {
-      return res.status(401).send('Invalid credentials');
+      return res.redirect('/login?error=invalid');
     }
 
     const session = await createSession(user);

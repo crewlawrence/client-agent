@@ -19,3 +19,8 @@ export async function query(text, params = []) {
   const info = stmt.run(params);
   return { rows: [], rowCount: info.changes, lastInsertRowid: info.lastInsertRowid };
 }
+
+export async function exec(sql) {
+  db.exec(sql);
+  return { rows: [], rowCount: 0 };
+}

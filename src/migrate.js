@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { query } from './db.js';
+import { query, exec } from './db.js';
 
 const migrationsDir = path.resolve('db', 'migrations_sqlite');
 
@@ -19,7 +19,7 @@ async function getApplied() {
 async function applyMigration(filename) {
   const filePath = path.join(migrationsDir, filename);
   const sql = fs.readFileSync(filePath, 'utf8');
-  await query(sql);
+  await exec(sql);
   await query('INSERT INTO schema_migrations (filename) VALUES (?)', [filename]);
   console.log(`Applied ${filename}`);
 }

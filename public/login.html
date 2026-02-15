@@ -14,6 +14,7 @@
     <form class="login-card" method="POST" action="/login">
       <h2>Welcome back</h2>
       <p class="muted">Sign in to review client updates.</p>
+      <div id="loginError" class="error" style="display:none;color:#c53030;margin-bottom:12px;">Invalid email or password. <a href="/signup">Create an account</a> if you don&apos;t have one.</div>
       <div class="field">
         <label for="email">Email</label>
         <input id="email" name="email" type="email" required />
@@ -28,5 +29,10 @@
       </p>
     </form>
   </div>
+  <script>
+    if (new URLSearchParams(location.search).get('error') === 'invalid') {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  </script>
 </body>
 </html>
